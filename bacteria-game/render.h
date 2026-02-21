@@ -7,12 +7,20 @@ namespace sf
     class String;
 }
 
+namespace std
+{
+    class mutex;
+}
+
+class RenderContext;
+
+
 sf::String getResourcePath(const sf::String& name);
 
-void commonDraw(sf::RenderWindow& window);
+void commonDraw(sf::RenderWindow& window, RenderContext* context);
 
-void draw(sf::RenderWindow& window);
+void draw(sf::RenderWindow& window, RenderContext* context);
 
-void renderingThread(sf::RenderWindow* window);
+void renderingThread(sf::RenderWindow* window, RenderContext* context);
 
 #endif // RENDER_H
