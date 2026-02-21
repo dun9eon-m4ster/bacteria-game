@@ -2,38 +2,35 @@
 #define KEYBOARDHANDLER_H
 
 #include <set>
-#include <vector>
-#include <iostream>
-#include <string>
-#include <thread>
 #include <optional>
-
+#include <functional>
 #include <SFML/Graphics.hpp>
-
 #include <SFML/Window/Keyboard.hpp>
 
-
+template<typename T>
+class Set : public std::set<T>
+{
+public:
+    bool contains(const T& value) const
+    {
+        return find(value) != cend();
+    }
+};
 
 class KeyboardHandler
 {
-    std::set<sf::Keyboard::Scancode> m_pressed_key_array;
 public:
+    typedef Set<sf::Keyboard::Scancode> PressedKeyArray;
+    void addHandler(std::function<void(PressedKeyArray)>);
+
     void keyPressed(const std::optional<sf::Event>& e);
     void keyReleased(const std::optional<sf::Event>& e);
+    
+private:
+    void processHandlers();
+    PressedKeyArray m_pressed_key_array;
+    std::vector<std::function<void(PressedKeyArray)>> m_handler_array;
 };
 
-template<typename T>
-std::ostream& operator <<(std::ostream& stream, const std::set<T>& v)
-{
-    stream << '[';
-    for (auto it = v.cbegin(); it != v.cend(); ++it)
-    {
-        stream << *it << ',';
-    }
-    stream << ']' << std::endl;
-    return stream;
-}
-
-std::ostream& operator <<(std::ostream& stream, const sf::Keyboard::Scancode& v);
 
 #endif // !KEYBOARDHANDLER_H
